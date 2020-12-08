@@ -14,8 +14,6 @@ final class MoreThanFilter extends AbstractContextAwareFilter
             !$this->isPropertyEnabled($property, $resourceClass) ||
             !$this->isPropertyMapped($property, $resourceClass)
         ) {
-            dump($this->isPropertyEnabled($property, $resourceClass), $this->isPropertyMapped($property, $resourceClass));
-
             return;
         }
 
