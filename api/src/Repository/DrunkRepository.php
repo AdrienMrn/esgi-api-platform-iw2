@@ -19,32 +19,13 @@ class DrunkRepository extends ServiceEntityRepository
         parent::__construct($registry, Drunk::class);
     }
 
-    // /**
-    //  * @return Drunk[] Returns an array of Drunk objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function moy()
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('d.quantity')
+            ->groupBy('d.quantity')
             ->getQuery()
-            ->getResult()
+            ->getArrayResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Drunk
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

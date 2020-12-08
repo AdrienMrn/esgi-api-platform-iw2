@@ -11,11 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Serializer\Filter\GroupFilter;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  * @ApiResource(
+ *     attributes={"security"="is_granted('ROLE_ADMIN') or object.owner == user"},
  *     normalizationContext={"groups"={"user_default", "user_get_pwd"}},
  *     collectionOperations={
  *         "get",
@@ -95,6 +97,12 @@ class User implements UserInterface
      * @Groups({"user_default"})
      */
     private $drunks;
+
+    /**
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $owner;
 
     public function __construct()
     {
@@ -266,6 +274,18 @@ class User implements UserInterface
                 $drunk->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?self
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?self $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

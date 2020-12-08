@@ -2,15 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\DrunkRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use App\Controller\DrunkController;
+use App\Filter\MoreThanFilter;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *          "get_drunk"={
+ *              "method"="GET",
+ *              "path"="/drunk/{id}",
+ *              "controller"=DrunkController::class,
+ *              "normalization_context"={"groups"={"drunk_get_custom"}}
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=DrunkRepository::class)
  */
 class Drunk
@@ -25,7 +37,8 @@ class Drunk
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="error.quantity")
-     * @Groups({"user_default"})
+     * @Groups({"user_default", "drunk_get_custom"})
+     * @ApiFilter(MoreThanFilter::class)
      */
     private $quantity;
 
